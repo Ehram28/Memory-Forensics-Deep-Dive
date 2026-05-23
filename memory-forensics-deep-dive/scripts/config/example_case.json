@@ -1,0 +1,48 @@
+{
+  "case_id": "case_001",
+  "analysis_host": {
+    "volatility3_path": "volatility3",
+    "rekall_path": "rekall",
+    "python_bin": "python3"
+  },
+  "memory_images": {
+    "windows": {
+      "image_path": "memory_dumps/case_001/windows/memdump.bin",
+      "profile": "Win10x64_19041_*/" 
+    },
+    "linux": {
+      "image_path": "memory_dumps/case_001/linux/memdump.lime",
+      "profile": "auto"
+    }
+  },
+  "output_root": "./",
+  "plugins": {
+    "volatility3": [
+      "windows.info",
+      "pslist",
+      "psscan",
+      "pstree",
+      "dlllist",
+      "malfind",
+      "cmdline",
+      "netscan",
+      "handles",
+      "hashdump"
+    ],
+    "strings_extract": true,
+    "yara_scan": true,
+    "timeline": true
+  },
+  "suspicious_scoring": {
+    "process_injection_terms": ["inject", "malfind", "WriteProcessMemory", "CreateRemoteThread"],
+    "powershell_terms": ["powershell", "-enc", "FromBase64String", "IEX"],
+    "credential_terms": ["lsass", "sekurlsa", "mimikatz", "procdump"],
+    "network_terms": ["beacon", "c2", "http", "https"]
+  },
+  "yara": {
+    "rules_dir": "yara_rules",
+    "scan_targets": ["extracted_artifacts/case_001/strings/", "memory_dumps/case_001/"],
+    "write_matches_to": "yara_matches/case_001/"
+  }
+}
+
