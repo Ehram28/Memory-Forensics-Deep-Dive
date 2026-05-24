@@ -1,5 +1,5 @@
 {
-  "case_id": "case_001",
+  "case_id": "CASE-001",
   "analysis_host": {
     "volatility3_path": "volatility3",
     "rekall_path": "rekall",
@@ -7,11 +7,7 @@
   },
   "memory_images": {
     "windows": {
-      "image_path": "memory_dumps/case_001/windows/memdump.bin",
-      "profile": "auto"
-    },
-    "linux": {
-      "image_path": "memory_dumps/case_001/linux/memdump.lime",
+      "image_path": "memory_dumps/CASE-001/memory.raw",
       "profile": "auto"
     }
   },
@@ -19,30 +15,27 @@
   "plugins": {
     "volatility3": [
       "windows.info",
-      "pslist",
-      "psscan",
-      "pstree",
-      "dlllist",
-      "malfind",
-      "cmdline",
-      "netscan",
-      "handles",
-      "hashdump"
-    ],
-    "strings_extract": true,
-    "yara_scan": true,
-    "timeline": true
+      "windows.pslist",
+      "windows.psscan",
+      "windows.pstree",
+      "windows.dlllist",
+      "windows.malfind",
+      "windows.cmdline",
+      "windows.netscan",
+      "windows.handles",
+      "windows.hashdump"
+    ]
   },
   "suspicious_scoring": {
-    "process_injection_terms": ["inject", "malfind", "WriteProcessMemory", "CreateRemoteThread"],
-    "powershell_terms": ["powershell", "-enc", "FromBase64String", "IEX"],
-    "credential_terms": ["lsass", "sekurlsa", "mimikatz", "procdump"],
-    "network_terms": ["beacon", "c2", "http", "https"]
+    "process_injection_terms": ["malfind", "WriteProcessMemory", "CreateRemoteThread"],
+    "powershell_terms": ["-enc", "FromBase64String", "Invoke-Expression"],
+    "credential_terms": ["lsass", "sekurlsa", "mimikatz"],
+    "network_terms": ["beacon", "c2"]
   },
   "yara": {
     "rules_dir": "yara_rules",
-    "scan_targets": ["extracted_artifacts/case_001/strings/", "memory_dumps/case_001/"],
-    "write_matches_to": "yara_matches/case_001/"
+    "scan_targets": ["extracted_artifacts/CASE-001"],
+    "write_matches_to": "reports/CASE-001/yara_matches.json"
   }
 }
 
